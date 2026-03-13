@@ -24,8 +24,6 @@ jobs:
       - name: Build APK
         run: |
           flet build apk --project fletcalc
-        env:
-          FLET_SERVER: https://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@github.com/1412qyj/fletcalc
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
