@@ -13,45 +13,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          flutter-version: '3.41.4'
-          channel: 'stable'
+          python-version: '3.11'
       
-      - name: Create pubspec.yaml for Python Flet app
+      - name: Install flet
         run: |
-          cat > pubspec.yaml << 'EOF'
-          name: fletcalc
-          version: 1.0.0+1
-          publish_to: 'none'
-          
-          environment:
-            sdk: '>=3.0.0 <4.0.0'
-          
-          dependencies:
-            flutter:
-              sdk: flutter
-            flet: ^0.21.0
-          
-          flutter:
-            uses-material-design: true
-          EOF
+          pip install flet
       
-      - name: Install dependencies
+      - name: Create spec file for Flet
         run: |
-          flutter config --no-analytics
-          flutter pub get
-      
-      - name: Copy Python files
-        run: |
-          mkdir -p lib
-          cp main.py lib/ 2>/dev/null || true
-          cp calculator_logic.py lib/ 2>/dev/null || true
+          # Flet needs specific setup for Python projects
+          echo "flet" > requirements_build.txt
       
       - name: Build APK
         run: |
-          flutter build apk --debug
+          flet build apk main.py --project fletcalc
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
