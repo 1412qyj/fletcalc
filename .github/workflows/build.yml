@@ -33,4 +33,4 @@ jobs:
         if: success()
         with:
           name: fletcalc-apk
-          path: build/*.apk
+          path: build/app/outputs/flutter-apk/*.apk
