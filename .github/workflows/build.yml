@@ -19,23 +19,43 @@ jobs:
           flutter-version: '3.41.4'
           channel: 'stable'
       
+      - name: Create pubspec.yaml for Python Flet app
+        run: |
+          cat > pubspec.yaml << 'EOF'
+          name: fletcalc
+          version: 1.0.0+1
+          publish_to: 'none'
+          
+          environment:
+            sdk: '>=3.0.0 <4.0.0'
+          
+          dependencies:
+            flutter:
+              sdk: flutter
+            flet: ^0.21.0
+          
+          flutter:
+            uses-material-design: true
+          EOF
+      
       - name: Install dependencies
         run: |
           flutter config --no-analytics
-          pip install flet
+          flutter pub get
+      
+      - name: Copy Python files
+        run: |
+          mkdir -p lib
+          cp main.py lib/ 2>/dev/null || true
+          cp calculator_logic.py lib/ 2>/dev/null || true
       
       - name: Build APK
         run: |
-          flet build apk --project fletcalc -v
-      
-      - name: List build output
-        run: |
-          ls -la build/ 2>/dev/null || echo "No build directory"
-          find build -name "*.apk" 2>/dev/null || echo "No APK found"
+          flutter build apk --debug
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         if: success()
         with:
           name: fletcalc-apk
-          path: build/flutter-apk/*.apk
+          path: build/app/outputs/flutter-apk/*.apk
