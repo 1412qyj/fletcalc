@@ -15,27 +15,22 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
+          python-version: '3.11'
       
-      - name: Add Flet to pubspec.yaml
+      - name: Install dependencies
         run: |
-          if ! grep -q "flet" pubspec.yaml; then
-            echo "  flet: ^0.21.0" >> pubspec.yaml
-          fi
-      
-      - name: Get dependencies
-        run: flutter pub get
+          pip install flet
       
       - name: Build APK
-        run: flutter build apk --debug
+        run: |
+          flet build apk main.py --project fletcalc --platform android
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
         if: success()
         with:
           name: fletcalc-apk
-          path: build/app/outputs/flutter-apk/*.apk
+          path: build/*.apk
