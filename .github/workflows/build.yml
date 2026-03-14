@@ -18,23 +18,17 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-
       - name: Install flet
         run: |
           pip install flet
 
       - name: Build APK
         run: |
-          flet build apk --yes
+          flet build apk --project fletcalc --yes
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         if: success()
         with:
           name: fletcalc-apk
-          path: build/app/outputs/flutter-apk/*.apk
+          path: build/flutter-apk/*.apk
