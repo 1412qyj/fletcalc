@@ -9,24 +9,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
-          python-version: '3.11'
+          flutter-version: '3.41.4'
+          channel: 'stable'
       
       - name: Install dependencies
         run: |
+          flutter config --no-analytics
           pip install flet
       
       - name: Build APK
         run: |
-          yes | flet build apk --project fletcalc
+          flet build apk --project fletcalc
       
       - name: Upload APK
         uses: actions/upload-artifact@v4
