@@ -26,9 +26,14 @@ jobs:
         run: |
           flet build apk --project fletcalc --yes
 
+      - name: Debug APK output
+        run: |
+          find . -name "*.apk" -type f 2>/dev/null
+          ls -la build/flutter-apk/ 2>/dev/null || echo "Directory not found"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         if: success()
         with:
           name: fletcalc-apk
-          path: build/flutter-apk/app-release.apk
+          path: build/flutter-apk/
